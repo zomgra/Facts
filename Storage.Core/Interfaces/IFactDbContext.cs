@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Storage.Core;
 
-namespace Storage.API.Data
+namespace Storage.Core.Interfaces
 {
     public interface IFactDbContext
     {

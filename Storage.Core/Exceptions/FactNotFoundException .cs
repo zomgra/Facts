@@ -1,4 +1,5 @@
-﻿namespace Storage.Core.Exceptions
+﻿
+namespace Storage.Core.Exceptions
 {
     public class FactNotFoundException : Exception
     {

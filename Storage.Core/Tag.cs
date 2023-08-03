@@ -8,6 +8,6 @@ namespace Storage.Core
         public string Name { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         [InverseProperty(nameof(Fact.Tags))]
-        public ICollection<Fact> Facts { get; set; }
+        public  ICollection<Fact> Facts { get; set; }
     }
 }

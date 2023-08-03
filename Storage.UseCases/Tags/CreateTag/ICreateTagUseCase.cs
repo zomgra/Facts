@@ -4,6 +4,6 @@ namespace Storage.UseCases.Tags.CreateTag
 {
     public interface ICreateTagUseCase
     {
-        Task<TagViewModel> Excecute(string name, CancellationToken cancellationToken);
+        Task<TagViewModel> Execute(string name, CancellationToken cancellationToken);
     }
 }

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Common;
-using Storage.API.Data;
 using Storage.Core;
+using Storage.Core.Interfaces;
 using Storage.Core.ViewModels;
 
 namespace Storage.UseCases.Tags.CreateTag
@@ -21,7 +21,7 @@ namespace Storage.UseCases.Tags.CreateTag
             _mapper = mapper;
         }
 
-        public async Task<TagViewModel> Excecute(string name, CancellationToken cancellationToken)
+        public async Task<TagViewModel> Execute(string name, CancellationToken cancellationToken)
         {
             var tag = new Tag
             {
@@ -31,7 +31,7 @@ namespace Storage.UseCases.Tags.CreateTag
             };
             try
             {
-                await _factDbContext.Tags.AddAsync(tag);
+                await _factDbContext.Tags.AddAsync(tag, cancellationToken);
                 await _factDbContext.SaveChangesAsync(cancellationToken);
                 return _mapper.Map<TagViewModel>(tag);
             }

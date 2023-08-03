@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
 using Common;
 using Microsoft.EntityFrameworkCore;
-using Storage.API.Data;
 using Storage.Core;
 using Storage.Core.Exceptions;
+using Storage.Core.Interfaces;
 using Storage.Core.ViewModels;
-using System.Threading;
 
 namespace Storage.UseCases.Facts.CreateFact
 {
@@ -13,7 +12,7 @@ namespace Storage.UseCases.Facts.CreateFact
     {
         private readonly IFactDbContext _factDbContext;
         private readonly IMapper _mapper;
-        private IGuidFactory _guidFactory;
+        private readonly IGuidFactory _guidFactory;
         private readonly IMomentProvider _momentProvider;
 
         public CreateFactsUseCase(IFactDbContext factDbContext, IMapper mapper, IGuidFactory guidFactory, IMomentProvider momentProvider)
@@ -27,7 +26,7 @@ namespace Storage.UseCases.Facts.CreateFact
         public async Task<FactViewModel> Excecute(string content, CancellationToken cancellationToken, params Guid[] tagIds)
         {
             var tags = await _factDbContext.Tags.Where(x=>tagIds.Contains(x.TagId)).ToListAsync(cancellationToken);
-            if(tags.Count() != tagIds.Count())
+            if(tags.Count != tagIds.Length)
                 throw new TagNotFoundException("Invalid one or more Tag Id in " + nameof(tagIds));
             if (!tags.Any())
                 throw new TagNotFoundException("Not found any Tag in " + nameof(tagIds) + "Tag id");

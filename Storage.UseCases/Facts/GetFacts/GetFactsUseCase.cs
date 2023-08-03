@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Storage.API.Data;
 using Storage.Core.Exceptions;
+using Storage.Core.Interfaces;
 using Storage.Core.ViewModels;
 
 namespace Storage.UseCases.Facts.GetFacts
@@ -21,7 +21,7 @@ namespace Storage.UseCases.Facts.GetFacts
         {
             try
             {
-                var facts = await _factDbContext.Facts.AsNoTracking().Skip((page - 1) * 5).Take(5).ToListAsync(cancellationToken);
+                var facts = await _factDbContext.Facts.Include(x=>x.Tags).AsNoTracking().Skip((page - 1) * 5).Take(5).ToListAsync(cancellationToken);
                 if (!facts.Any())
                 {
                     throw new FactNotFoundException("No found any facts");
