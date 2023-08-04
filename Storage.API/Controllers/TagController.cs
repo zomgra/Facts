@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Storage.API.Publisher;
 using Storage.UseCases.Tags.CreateTag;
 using Storage.UseCases.Tags.DeleteTag;
 
@@ -12,9 +13,12 @@ namespace Storage.API.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateTagAsync(string name,
             CancellationToken cancellationToken,
+            [FromServices] INewTagPublisher publisher,
             [FromServices] ICreateTagUseCase useCase)
         {
             var tag = await useCase.Execute(name, cancellationToken);
+            if (tag != null)
+                await publisher.Publish(tag);
             return Ok(tag);
         }
 
@@ -24,8 +28,8 @@ namespace Storage.API.Controllers
             CancellationToken cancellationToken,
             [FromServices] IDeleteTagUseCase useCase)
         {
-            var tag = await useCase.Execute(id, cancellationToken);
-            return Ok(tag);
+            var ok = await useCase.Execute(id, cancellationToken);
+            return Ok();
         }
     }
 }

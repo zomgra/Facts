@@ -1,7 +1,9 @@
+using Duende.IdentityServer.Services;
 using IdentityServer;
 using IdentityServer.Data;
 using IdentityServer.Data.Interfaces;
 using IdentityServer.Models.Identity;
+using IdentityServer.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,7 +25,6 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(c =>
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
-builder.Services.AddScoped<IDbInitilizer, DbInitiliazer>();
 
 builder.Services.AddIdentityServer(options =>
 {
@@ -38,7 +39,11 @@ builder.Services.AddIdentityServer(options =>
     .AddInMemoryApiScopes(IdentityConfiguration.GetApiScopes())
     .AddInMemoryIdentityResources(IdentityConfiguration.GetIdentityResources())
     .AddInMemoryClients(IdentityConfiguration.GetClients())
+    .AddProfileService<ProfileService>()
     .AddDeveloperSigningCredential();
+
+builder.Services.AddScoped<IDbInitilizer, DbInitiliazer>();
+builder.Services.AddScoped<IProfileService, ProfileService>();
 
 var app = builder.Build();
 

@@ -13,7 +13,10 @@ namespace Storage.UseCases.Tags.CreateTag
         private readonly IFactDbContext _factDbContext;
         private readonly IMapper _mapper;
 
-        public CreateTagUseCase(IGuidFactory guidFactory, IMomentProvider momentProvider, IFactDbContext factDbContext, IMapper mapper)
+        public CreateTagUseCase(IGuidFactory guidFactory,
+            IMomentProvider momentProvider,
+            IFactDbContext factDbContext, 
+            IMapper mapper)
         {
             _guidFactory = guidFactory;
             _momentProvider = momentProvider;

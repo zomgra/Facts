@@ -4,9 +4,17 @@ namespace EmailSender.API.Listeners
     public class FactEventListener : BackgroundService
     {
         private readonly ILogger<FactEventListener> _logger;
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+
+        public FactEventListener(ILogger<FactEventListener> logger)
         {
-            throw new NotImplementedException();
+            _logger = logger;
+        }
+
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        {
+            await Task.Yield();
+            _logger.LogInformation("Fact Event Listener is start");
+            //throw new NotImplementedException();
         }
     }
 }

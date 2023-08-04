@@ -26,7 +26,7 @@ namespace Storage.API.Publisher
             var channel = _connection.CreateModel();
 
             var excangeName = _configuration["RabbitMq:ExchangeName"];
-            var routingKey = _configuration["RabbitMq:RoutingCreateKey"];
+            var routingKey = _configuration["RabbitMq:RoutingCreateFactKey"];
 
             var property = channel.CreateBasicProperties();
 

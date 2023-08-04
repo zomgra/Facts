@@ -8,7 +8,6 @@ using Storage.API.Publisher;
 using Storage.Core.Interfaces;
 using Storage.Core.Mapper;
 using Storage.UseCases;
-using Swashbuckle.AspNetCore.SwaggerGen;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -85,6 +84,8 @@ builder.Services.AddTransient<IConnection>(c =>
 });
 
 builder.Services.AddTransient<INewFactPublisher, NewFactPublisher>();
+builder.Services.AddTransient<INewTagPublisher, NewTagPublisher>();
+
 
 builder.Services.AddUseCases();
 builder.Services.AddCommonServices();

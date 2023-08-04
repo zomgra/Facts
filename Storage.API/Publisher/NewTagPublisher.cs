@@ -1,5 +1,8 @@
-﻿using RabbitMQ.Client;
+﻿using Newtonsoft.Json;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 using Storage.Core.ViewModels;
+using System.Text;
 
 namespace Storage.API.Publisher
 {
@@ -18,10 +21,16 @@ namespace Storage.API.Publisher
             _configuration = configuration;
         }
 
-        public Task Publish(TagViewModel model)
+        public async Task Publish(TagViewModel model)
         {
-            _logger.LogInformation("Publish new tag with Id: {0}", model.Id);
-            throw new NotImplementedException();
+            _logger.LogInformation("Publish new tag with Id: {Id}", model.Id);
+
+            var channel = _connection.CreateModel();
+            var property = channel.CreateBasicProperties();
+            var routing = _configuration["RabbitMq:RoutingCreateTagKey"];
+            byte[] message = Encoding.ASCII.GetBytes(await JsonConvert.SerializeObjectAsync(model));
+
+            channel.BasicPublish(_configuration["RabbitMq:ExchangeName"], routing, property, message);
         }
     }
 }

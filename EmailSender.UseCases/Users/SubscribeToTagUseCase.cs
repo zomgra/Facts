@@ -1,4 +1,5 @@
 ﻿using Common;
+using EmaiSender.Core.Exceptions;
 using EmaiSender.Core.Inderfaces;
 using EmaiSender.Core.Models;
 using EmaiSender.Core.ViewModel;
@@ -28,6 +29,10 @@ namespace EmailSender.UseCases.Users
             try
             {
                 var tag = await _emailDbContext.Tags.FirstOrDefaultAsync(x => x.TagId == tagId, cancellationToken);
+
+                if (tag is null)
+                    throw new TagNotExistsException($"Tag with id {tagId} not exists");
+
                 await _emailDbContext.Users.AddAsync(newUser);
                 newUser.Tags.Add(tag);
                 await _emailDbContext.SaveChangesAsync(cancellationToken);
