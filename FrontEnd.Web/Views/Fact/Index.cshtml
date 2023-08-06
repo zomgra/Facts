@@ -1,0 +1,21 @@
+﻿@model FactsViewModel
+
+@ViewBag.AccessToken
+
+<div class="row">
+    @if(Model.Facts.Count > 0)
+    @foreach (var fact in Model.Facts)
+    {
+        <div class="card col-4">
+            <div>
+                @foreach (var tag in fact.Tags)
+                {
+                    <a class="card-subtitle" asp-action="More" asp-route-name="@tag.Name" asp-controller="Tag" asp-route-id="@tag.Id">@tag.Name</a>
+                }
+            </div>
+            <div class="card-body">
+                <p class="card-text">@fact.Content</p>
+            </div>
+        </div>
+    }
+</div>

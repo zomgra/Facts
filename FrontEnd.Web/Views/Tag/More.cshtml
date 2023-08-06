@@ -1,0 +1,15 @@
+﻿@model TagViewModel
+
+<p>Tag: @Model.Name</p>
+
+
+<div class="border-1 d-flex justify-content-center">
+    @if (Model.Facts.Count > 0)
+    @foreach (var fact in Model.Facts)
+    {
+        <div>
+            <a asp-controller="Fact" asp-action="More" asp-route-id="@fact.Id">Details</a>
+            <p>@fact.Content</p>
+        </div>
+    }
+</div>

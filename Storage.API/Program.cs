@@ -83,6 +83,7 @@ builder.Services.AddTransient<IConnection>(c =>
     return factory.CreateConnection();
 });
 
+
 builder.Services.AddTransient<INewFactPublisher, NewFactPublisher>();
 builder.Services.AddTransient<INewTagPublisher, NewTagPublisher>();
 builder.Services.AddTransient<IGetListByTagIdUseCase, GetListByTagIdUseCase>();

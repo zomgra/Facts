@@ -28,6 +28,12 @@ builder.Services.AddAuthentication(opt =>
         options.SaveTokens = true;
     });
 
+
+builder.Services.AddHttpClient("Storage", client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["ServicesUrl:StorageApi:Base"]);
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

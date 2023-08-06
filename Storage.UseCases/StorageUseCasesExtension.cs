@@ -4,6 +4,7 @@ using Storage.UseCases.Facts.CreateFact;
 using Storage.UseCases.Facts.GetFacts;
 using Storage.UseCases.Tags.CreateTag;
 using Storage.UseCases.Tags.DeleteTag;
+using Storage.UseCases.Tags.GetTagsList;
 
 namespace Storage.UseCases
 {
@@ -11,10 +12,12 @@ namespace Storage.UseCases
     {
         public static IServiceCollection AddUseCases(this IServiceCollection services)
         {
-            services.AddTransient<ICreateTagUseCase, CreateTagUseCase>();
             services.AddTransient<IGetFactsUseCase, GetFactsUseCase>();
             services.AddTransient<ICreateFactUseCase, CreateFactsUseCase>();
+
+            services.AddTransient<IGetTagsListUseCase, GetTagsListUseCase>();
             services.AddTransient<IDeleteTagUseCase, DeleteTagUseCase>();
+            services.AddTransient<ICreateTagUseCase, CreateTagUseCase>();
             return services;
         }
     }
