@@ -72,7 +72,7 @@ builder.Services.AddTransient<IConnection>(c =>
     {
         Endpoint = new AmqpTcpEndpoint(),
         DispatchConsumersAsync = true
-       
+
     };
     return factory.CreateConnection();
 });
@@ -84,6 +84,7 @@ builder.Services.AddCommonServices();
 builder.Services.AddTransient<ISubscribeToTagUseCase, SubscribeToTagUseCase>();
 builder.Services.AddTransient<IAddNewTagUseCase, AddNewTagUseCase>();
 builder.Services.AddTransient<IGetSubscribedUserByNameTagUseCase, GetSubscribedUserByNameTagUseCase>();
+builder.Services.AddTransient<IGetSubscribedUsersByTagIdUseCase, GetSubscribedUsersByTagIdUseCase>();
 
 builder.Services.AddHostedService<TagEventListener>();
 builder.Services.AddHostedService<FactEventListener>();
@@ -99,6 +100,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -2,14 +2,22 @@
 
 <p>Tag: @Model.Name</p>
 
+@ViewBag.Result
+
+<div class="row">
+    <div class="col-9">
+
+    </div>
+    <div class="col-3">
+        <a class="btn btn-info" asp-action="Subscribe" asp-controller="Tag"asp-route-name="@Model.Name" asp-route-id="@Model.Id">Subscribe</a>
+    </div>
+</div>
+
 
 <div class="border-1 d-flex justify-content-center">
     @if (Model.Facts.Count > 0)
     @foreach (var fact in Model.Facts)
     {
-        <div>
-            <a asp-controller="Fact" asp-action="More" asp-route-id="@fact.Id">Details</a>
-            <p>@fact.Content</p>
-        </div>
+        <partial name="_FactInfoPartial" model="fact" />
     }
 </div>

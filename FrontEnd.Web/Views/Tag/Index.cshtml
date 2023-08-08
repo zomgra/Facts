@@ -1,1 +1,19 @@
-﻿
+﻿@model TagViewModel
+
+ViewBag.Result
+
+<div class="row">
+    <div class="col-9">
+
+    </div>
+    <div class="col-3">
+        <a class="btn btn-info" asp-action="Subscribe" asp-controller="Tag" asp-route-id="@Model.Id">Subscribe</a>
+    </div>
+</div>
+
+<div class="row">
+    @foreach (var fact in Model.Facts)
+    {
+        <partial name="_FactInfoPartial" model="fact" />
+    }
+</div>

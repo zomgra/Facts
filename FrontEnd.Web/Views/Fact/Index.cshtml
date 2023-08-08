@@ -1,21 +1,58 @@
 ﻿@model FactsViewModel
 
-@ViewBag.AccessToken
+@*For knowing Access Token*@
+Token: @ViewBag.Data.AccessToken
 
-<div class="row">
-    @if(Model.Facts.Count > 0)
-    @foreach (var fact in Model.Facts)
-    {
-        <div class="card col-4">
-            <div>
-                @foreach (var tag in fact.Tags)
+Search: @ViewBag.Data.SearchString
+Page: @ViewBag?.Data?.Page
+
+
+<form asp-action="Index" method="post" asp-controller="Fact">
+    <input value="@ViewBag?.Data.Page" name="page" hidden />
+    <div>
+        <label for="search">Input search</label>
+        <input type="text" name="search" id="search" />
+        <input type="submit" />
+    </div>
+</form>
+
+
+
+    <div class="row">
+        @if (Model.Facts.Count > 0)
+            @foreach (var fact in Model.Facts)
+            {
+                <partial name="_FactInfoPartial" model="fact"/>
+            }
+    </div>
+
+
+<div>
+    <form asp-action="Index" id="paginationForm" method="post" asp-controller="Fact">
+        <input value="@ViewBag?.Data.SearchString" name="search" hidden />
+        <input id="pageInput" hidden name="page" />
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                @for (int i = 1; i <= 10; i++)
                 {
-                    <a class="card-subtitle" asp-action="More" asp-route-name="@tag.Name" asp-controller="Tag" asp-route-id="@tag.Id">@tag.Name</a>
+                    <li class="page-item"><a class="page-link" data-page="@i">@i</a></li>
+                    @*<li class="page-item"><button type="submit" class="page-link" name="page">@i</button></li>*@
                 }
-            </div>
-            <div class="card-body">
-                <p class="card-text">@fact.Content</p>
-            </div>
-        </div>
-    }
+                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            </ul>
+        </nav>
+    </form>
 </div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("a.page-link").click(function (e) {
+                e.preventDefault();
+                var page = $(this).data("page");
+                $("#pageInput").val(page);
+                $("#paginationForm").submit();
+            });
+        });
+    </script>
+}

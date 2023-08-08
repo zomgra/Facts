@@ -33,6 +33,8 @@ namespace IdentityServer.Services
                 .ToList();
 
             claims.Add(new(JwtClaimTypes.GivenName, user.FirstName));
+            claims.Add(new(JwtClaimTypes.Name, user.FirstName + " " + user.LastName));
+            claims.Add(new(JwtClaimTypes.Email, user.Email));
             claims.Add(new(JwtClaimTypes.FamilyName, user.LastName));
 
 

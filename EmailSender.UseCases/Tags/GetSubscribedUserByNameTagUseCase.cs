@@ -9,6 +9,13 @@ namespace EmailSender.UseCases.Tags
     {
         private readonly IEmailDbContext _context;
         private readonly ILogger<GetSubscribedUserByNameTagUseCase> _logger;
+
+        public GetSubscribedUserByNameTagUseCase(ILogger<GetSubscribedUserByNameTagUseCase> logger, IEmailDbContext context)
+        {
+            _logger = logger;
+            _context = context;
+        }
+
         public async Task<IEnumerable<UserViewModel>> Execute(string name, CancellationToken cancellationToken)
         {
             name = name.Trim().ToUpper();
@@ -20,7 +27,7 @@ namespace EmailSender.UseCases.Tags
                     Id = x.UserId,
                     Name = x.Name
                 })
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             _logger.LogInformation("Have {count} users, which subscribe to {tag}", users.Count, name);
 

@@ -14,7 +14,7 @@ namespace Storage.API.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateFactAsync(string content,
-            Guid[] ids,
+            [FromBody]Guid[] ids,
             CancellationToken cancellationToken,
             [FromServices] ICreateFactUseCase useCase,
             [FromServices] INewFactPublisher publisher)
@@ -26,10 +26,11 @@ namespace Storage.API.Controllers
         [HttpGet]
         [ProducesResponseType(statusCode: 200,Type = typeof(IEnumerable<FactViewModel>))]
         public async Task<IActionResult> GetAllFactsAsync(int page,
+            string? search,
             CancellationToken cancellation,
             [FromServices] IGetFactsUseCase useCase)
         {
-            var facts = await useCase.Execute(page, cancellation);
+            var facts = await useCase.Execute(page, search, cancellation);
             return Ok(facts);
         }
         [HttpGet]

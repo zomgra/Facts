@@ -18,7 +18,7 @@ namespace EmailSender.UseCases.Users
             _guidFactory = guidFactory;
         }
 
-        public async Task Execute(UserViewModel model, Guid tagId, CancellationToken cancellationToken)
+        public async Task<bool> Execute(UserViewModel model, Guid tagId, CancellationToken cancellationToken)
         {
             var newUser = new User
             {
@@ -31,15 +31,20 @@ namespace EmailSender.UseCases.Users
                 var tag = await _emailDbContext.Tags.FirstOrDefaultAsync(x => x.TagId == tagId, cancellationToken);
 
                 if (tag is null)
+                {
+                    return false;
                     throw new TagNotExistsException($"Tag with id {tagId} not exists");
+                }
 
                 await _emailDbContext.Users.AddAsync(newUser);
                 newUser.Tags.Add(tag);
                 await _emailDbContext.SaveChangesAsync(cancellationToken);
+                return true;
             }
             catch (Exception ex)
             {
 
+                return false;
                 throw;
             }
         }

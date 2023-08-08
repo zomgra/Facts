@@ -17,17 +17,21 @@ namespace Storage.UseCases.Facts.GetFacts
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<FactViewModel>> Execute(int page, CancellationToken cancellationToken)
+        public async Task<IEnumerable<FactViewModel>> Execute(int page, string search, CancellationToken cancellationToken)
         {
             try
             {
-                var facts = await _factDbContext.Facts.Include(x=>x.Tags).AsNoTracking().Skip((page - 1) * 5).Take(5).ToListAsync(cancellationToken);
+                var facts = _factDbContext.Facts.Include(x=>x.Tags).AsNoTracking().Skip((page - 1) * 5).Take(5);
                 if (!facts.Any())
                 {
                     throw new FactNotFoundException("No found any facts");
                 }
+                if (!string.IsNullOrWhiteSpace(search))
+                {
+                    facts = facts.Where(x => x.Content.Contains(search));
+                }
+                return _mapper.Map<List<FactViewModel>>(await facts.ToListAsync(cancellationToken));
 
-                return _mapper.Map<List<FactViewModel>>(facts);
             }
             catch (Exception ex)
             {

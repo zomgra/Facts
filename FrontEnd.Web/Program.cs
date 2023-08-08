@@ -1,4 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using System.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,10 +31,29 @@ builder.Services.AddAuthentication(opt =>
         options.SaveTokens = true;
     });
 
+builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddHttpClient("Storage", client =>
+builder.Services.AddHttpClient("Storage", c =>
 {
-    client.BaseAddress = new Uri(builder.Configuration["ServicesUrl:StorageApi:Base"]);
+    c.BaseAddress = new Uri(builder.Configuration["ServicesUrl:StorageApi:Base"]);
+    var serviceProvider = builder.Services.BuildServiceProvider();
+    var httpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
+    var bearerToken = httpContextAccessor.HttpContext.Request
+                         .Headers["Authorization"]
+                         .FirstOrDefault(h => h.StartsWith("bearer ", StringComparison.InvariantCultureIgnoreCase));
+
+    if (bearerToken != null)
+        c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearerToken);
+});
+builder.Services.AddHttpClient("Subscribe", c =>
+{
+    c.BaseAddress = new Uri(builder.Configuration["ServicesUrl:SubscribeApi:Base"]);
+
+    var serviceProvider = builder.Services.BuildServiceProvider();
+    var httpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
+    var bearerToken = httpContextAccessor.HttpContext.Request
+                         .Headers["Authorization"]
+                         .FirstOrDefault(h => h.StartsWith("bearer ", StringComparison.InvariantCultureIgnoreCase));
 });
 
 var app = builder.Build();
@@ -52,8 +74,20 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute(
+app.UseEndpoints(x =>
+{
+    x.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+    
+    x.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{search:regex(a-ZА-Я)?}");
+    
+    x.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{search:regex(a-ZА-Я)?}/{page:int?}");
+
+});
 
 app.Run();

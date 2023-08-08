@@ -1,0 +1,12 @@
+﻿@model Fact
+<div class="card col-4">
+    <div>
+        @foreach (var tag in Model.Tags)
+        {
+            <a class="card-subtitle" asp-action="More" asp-route-name="@tag.Name" asp-controller="Tag" asp-route-id="@tag.Id">@tag.Name</a>
+        }
+    </div>
+    <div class="card-body">
+        <p class="card-text">@Model.Content</p>
+    </div>
+</div>
