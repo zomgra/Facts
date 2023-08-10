@@ -1,13 +1,16 @@
 using Common;
 using EmailSender.API.Data;
 using EmailSender.API.Listeners;
+using EmailSender.UseCases.Facts;
 using EmailSender.UseCases.Tags;
 using EmailSender.UseCases.Users;
 using EmaiSender.Core.Inderfaces;
+using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using RabbitMQ.Client;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -78,6 +81,13 @@ builder.Services.AddTransient<IConnection>(c =>
 });
 
 
+var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+var configBuilder = new ConfigurationBuilder()
+       .SetBasePath(Directory.GetCurrentDirectory())
+       .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+       .AddJsonFile($"appsettings.{env}.json", optional: true) 
+       .AddEnvironmentVariables();
+
 builder.Services.AddTransient<IEmailDbContext, EmailDbContext>();
 builder.Services.AddCommonServices();
 
@@ -85,6 +95,8 @@ builder.Services.AddTransient<ISubscribeToTagUseCase, SubscribeToTagUseCase>();
 builder.Services.AddTransient<IAddNewTagUseCase, AddNewTagUseCase>();
 builder.Services.AddTransient<IGetSubscribedUserByNameTagUseCase, GetSubscribedUserByNameTagUseCase>();
 builder.Services.AddTransient<IGetSubscribedUsersByTagIdUseCase, GetSubscribedUsersByTagIdUseCase>();
+builder.Services.AddTransient<ISendMailsToUserByTag, SendMailsToUserByTag>();
+builder.Services.AddTransient<ISenderMail, SenderMail>();
 
 builder.Services.AddHostedService<TagEventListener>();
 builder.Services.AddHostedService<FactEventListener>();

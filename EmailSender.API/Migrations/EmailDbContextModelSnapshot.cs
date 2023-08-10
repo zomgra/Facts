@@ -37,7 +37,7 @@ namespace EmailSender.API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Tags");
+                    b.ToTable("Tags", (string)null);
                 });
 
             modelBuilder.Entity("EmaiSender.Core.Models.User", b =>
@@ -56,7 +56,7 @@ namespace EmailSender.API.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("EmaiSender.Core.Models.Tag", b =>

@@ -12,6 +12,7 @@ namespace EmailSender.API.Controllers
     {
         string UserEmail => User?.FindFirstValue(ClaimTypes.Email);
 
+        
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> SubscribeToTag([FromBody]Guid tagId,
@@ -47,6 +48,11 @@ namespace EmailSender.API.Controllers
         {
             var users = await useCase.Execute(tagName, cancellationToken);
             return Ok(users);
+        }
+        [HttpPut]
+        public async Task<IActionResult> UnSubscribe(string userId, Guid tagId)
+        {
+            return Ok(userId + tagId);
         }
     }
 }
