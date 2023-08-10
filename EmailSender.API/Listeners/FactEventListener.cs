@@ -1,5 +1,4 @@
-﻿
-using EmailSender.UseCases.Facts;
+﻿using EmailSender.UseCases.Facts;
 using EmaiSender.Core.Models;
 using Newtonsoft.Json;
 using RabbitMQ.Client;

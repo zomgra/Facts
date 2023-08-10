@@ -50,9 +50,11 @@ namespace EmailSender.API.Controllers
             return Ok(users);
         }
         [HttpPut]
-        public async Task<IActionResult> UnSubscribe(string userId, Guid tagId)
+        public async Task<IActionResult> UnSubscribe(string userId, Guid tagId,
+            [FromServices] IUnSubscribeToTagUseCase useCase, CancellationToken cancellationToken)
         {
-            return Ok(userId + tagId);
+            await useCase.Execute(tagId, userId, cancellationToken);
+            return Ok();
         }
     }
 }
